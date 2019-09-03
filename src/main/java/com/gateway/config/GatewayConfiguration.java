@@ -13,40 +13,59 @@ import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 
+import properties.GatewayLimitProperties;
+import properties.PermitAllUrlProperties;
+import properties.ResourceServerProperties;
 import reactor.core.publisher.Mono;
 
 @Configuration
 public class GatewayConfiguration {
-	
+
 	private static final String ALLOWED_HEADERS = "x-requested-with, authorization, Content-Type, Authorization, credential, X-XSRF-TOKEN";
 	private static final String ALLOWED_METHODS = "GET, PUT, POST, DELETE, OPTIONS";
 	private static final String ALLOWED_ORIGIN = "*";
 	private static final String MAX_AGE = "3600";
-	
+
 	@Bean
 	public WebFilter corsFilter() {
 		return (ServerWebExchange ctx, WebFilterChain chain) -> {
 			ServerHttpRequest request = ctx.getRequest();
-			if(CorsUtils.isCorsRequest(request)) {
+			if (CorsUtils.isCorsRequest(request)) {
 				ServerHttpResponse response = ctx.getResponse();
 				HttpHeaders headers = response.getHeaders();
 				headers.add("Access-Control-Allow-Origin", ALLOWED_ORIGIN);
 				headers.add("Access-Control-Allow-Methods", ALLOWED_METHODS);
 				headers.add("Access-Control-Max-Age", MAX_AGE);
-                headers.add("Access-Control-Allow-Headers",ALLOWED_HEADERS);
-                if(request.getMethod() == HttpMethod.OPTIONS) {
-                	response.setStatusCode(HttpStatus.OK);
-                	return Mono.empty();
-                }
+				headers.add("Access-Control-Allow-Headers", ALLOWED_HEADERS);
+				if (request.getMethod() == HttpMethod.OPTIONS) {
+					response.setStatusCode(HttpStatus.OK);
+					return Mono.empty();
+				}
 			}
 			return chain.filter(ctx);
 		};
 	}
+
+	/**
+	 * Quando o servidor for iniciado, ler a configuração correspondente e as
+	 * seguintes propriedade de configuração começando com o auth.
+	 */
+	@Bean
+	@ConfigurationProperties(prefix = "auth")
+	public PermitAllUrlProperties getPermitAllUrlProperties() {
+		return new PermitAllUrlProperties();
+	}
 	
-//	@Bean
-//	@ConfigurationProperties(prefix = "auth")
-//	public PermitAllUrlProperties getPermitAllUrlProperties() {
-//		return new PermitAllUrlProperties();
-//	}
+	@Bean
+	@ConfigurationProperties(prefix = "gateway.limit")
+	public GatewayLimitProperties gatewayLimitProperties() {
+		return new GatewayLimitProperties();
+	}
+	
+	@Bean
+	@ConfigurationProperties(prefix = "security.oauth2")
+	public ResourceServerProperties resourceServerProperties() {
+		return new ResourceServerProperties();
+	}
 
 }
