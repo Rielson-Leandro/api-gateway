@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
 public class RemoteAddrKeyResolver implements KeyResolver{
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(RemoteAddrKeyResolver.class);
-	private static final String BEAN_NAME = "remoteAddrKeyResolver";
+	public static final String BEAN_NAME = "remoteAddrKeyResolver";
 	
 	@Override
 	public Mono<String> resolve(ServerWebExchange exchange) {
