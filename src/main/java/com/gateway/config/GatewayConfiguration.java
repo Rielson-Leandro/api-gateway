@@ -13,9 +13,10 @@ import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 
-import properties.GatewayLimitProperties;
-import properties.PermitAllUrlProperties;
-import properties.ResourceServerProperties;
+import com.gateway.properties.GatewayLimitProperties;
+import com.gateway.properties.PermitAllUrlProperties;
+import com.gateway.properties.ResourceServerProperties;
+
 import reactor.core.publisher.Mono;
 
 @Configuration

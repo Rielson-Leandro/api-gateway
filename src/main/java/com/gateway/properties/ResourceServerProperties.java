@@ -1,4 +1,4 @@
-package properties;
+package com.gateway.properties;
 
 public class ResourceServerProperties {
 

@@ -1,4 +1,4 @@
-package properties;
+package com.gateway.properties;
 
 import java.util.ArrayList;
 import java.util.Iterator;
